@@ -1,16 +1,20 @@
 import com.jtattoo.plaf.aero.AeroLookAndFeel;
 import listeners.ButtonListener;
 import listeners.ComboBoxListener;
-import sun.security.smartcardio.SunPCSC;
+import listeners.KeysListener;
 
 import javax.swing.*;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.GridBagLayout;
+import java.awt.GridBagConstraints;
+import java.awt.Font;
+import java.awt.Insets;
+import java.awt.Color;
 
 public class Calculator {
 
     //Declarate a variable of Calculator
     private JLabel typeCalc;
-    private JLabel changeType;
     private JTextField fieldResult;
     private JComboBox<String> listSkin;
     private JScrollPane scroller;
@@ -20,7 +24,7 @@ public class Calculator {
     private int[][] numConstrains;
     private int[][] memoryConstrains;
     private ButtonListener buttonListener;
-    private double resultOfOperations;
+    private KeysListener keysListener;
     private JPanel panel;
     private JFrame frame;
 
@@ -46,7 +50,7 @@ public class Calculator {
     }
 
     private void createLabel() {
-        typeCalc = new JLabel("      Standart"); //need to make a variable what will have a link with selected item of ComboBoxListener
+        typeCalc = new JLabel("      Standart");
         typeCalc.setFont(new Font("SansSerif", Font.CENTER_BASELINE, 20));
 
         gbc.gridx = 0;
@@ -61,6 +65,7 @@ public class Calculator {
 
     private void createTextField() {
         fieldResult = new JTextField("0");
+        fieldResult.setFocusable(false);
         fieldResult.setFont(new Font("Result", Font.ROMAN_BASELINE, 50));
         fieldResult.setHorizontalAlignment(SwingConstants.RIGHT);
         fieldResult.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
@@ -77,7 +82,7 @@ public class Calculator {
 
     private void createComboBox() {
         String[] list = {
-                "------- Change skin -------",
+                "--- Change skin ---",
                 "Default",
                 "BernsteinLookAndFeel",
                 "AluminiumLookAndFeel",
@@ -114,8 +119,8 @@ public class Calculator {
     }
 
     private void createButton() {
-        resultOfOperations = 0;
-        buttonListener = new ButtonListener(fieldResult, resultOfOperations);
+        buttonListener = new ButtonListener(fieldResult);
+        keysListener = new KeysListener(fieldResult);
         String[] buttonOperations = {"CE", "C", "\uF0E7","1/x", "%", "\u221A", "x2", "\u2797", "7", "8", "9", "\u26CC",
                                      "4", "5", "6", "-", "1", "2", "3", "+", "\u00B1", "0", ",", "="};
         //[0]- gridx, [1]- gridy, [2]- gridWidth, [3]- gridHeight
@@ -133,6 +138,7 @@ public class Calculator {
             button = new JButton();
             button.setText(buttonOperations[i]);
             button.addActionListener(buttonListener);
+            button.addKeyListener(keysListener);
 
             gbc.gridx = numConstrains[i][0];
             gbc.gridy = numConstrains[i][1];
@@ -156,6 +162,7 @@ public class Calculator {
             button = new JButton();
             button.setText(buttonMemoryOfOperations[i]);
             button.addActionListener(buttonListener);
+            button.addKeyListener(keysListener);
 
             gbc.gridx = memoryConstrains[i][0];
             gbc.gridy = memoryConstrains[i][1];
@@ -181,13 +188,11 @@ public class Calculator {
         frame.pack();
 
         addComboBoxListener();
-
     }
 
     private void addComboBoxListener() {
         ComboBoxListener comboBoxListener = new ComboBoxListener(frame);
         listSkin.addActionListener(comboBoxListener);
     }
-
 }
 
