@@ -1,0 +1,10 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="Calculator_GUI:jar">
+    <output-path>$USER_HOME$/Desktop</output-path>
+    <root id="archive" name="Calculator_GUI.jar">
+      <element id="module-output" name="Calculator_GUI" />
+      <element id="extracted-dir" path="$APPLICATION_HOME_DIR$/redist/annotations-java8.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../MyCalculator/JTattoo-1.6.11.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
