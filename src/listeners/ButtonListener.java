@@ -6,21 +6,19 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
 
+import static mathOperations.MathOperations.*;
+
 public class ButtonListener implements ActionListener {
 
     private JTextField fieldResult;
     private String resultSetNumbers;
     private double memoryOfCalc;
-    private double resultOfOperations;
-    private boolean isOperant = false;
-    private int operant;
-    private double[] bufferOfNumbers = {0.0, 0.0, 0.0};
     private double finalResult;
 
     public ButtonListener(JTextField fieldResult) {
         this.fieldResult = fieldResult;
         this.resultSetNumbers = "";
-        this.resultOfOperations = 0.0;
+        resultOfOperations = 0.0;
     }
 
     @Override
@@ -36,7 +34,6 @@ public class ButtonListener implements ActionListener {
         JButton button = (JButton) event.getSource();
 
         if (button.getText().equals("+")) {
-
             if (!isOperant) {
                 isOperant = true;
                 operant = 1;
@@ -51,7 +48,6 @@ public class ButtonListener implements ActionListener {
             //cleaering a text field if pressed a button "+"
             fieldResult.setText("");
         } else if (button.getText().equals("-")) {
-
             if (!isOperant) {
                 isOperant = true;
                 operant = 2;
@@ -66,7 +62,6 @@ public class ButtonListener implements ActionListener {
             //cleaering a text field if pushed button "-"
             fieldResult.setText("");
         } else if (button.getText().equals("\u2797")) { //  division
-
             if (!isOperant) {
                 isOperant = true;
                 operant = 3;
@@ -75,13 +70,16 @@ public class ButtonListener implements ActionListener {
                 bufferOfNumbers[0] = bufferOfNumbers[1];
                 finalResult = bufferOfNumbers[0];
             } else {
-                mathOperations(operant);
+                try {
+                    mathOperations(operant);
+                } catch (ArithmeticException e) {
+                    fieldResult.setText("can not be divided by zero!");
+                }
                 operant = 3;
             }
             //cleaering a text field if pushed button "/"
             fieldResult.setText("");
         } else if (button.getText().equals("\u26CC")) { // increase
-
             if (!isOperant) {
                 isOperant = true;
                 operant = 4;
@@ -166,37 +164,6 @@ public class ButtonListener implements ActionListener {
             //Handler of number buttons (0, 1, 2, 3.....9)
             fieldResult.replaceSelection(resultSetNumbers + button.getActionCommand());
             resultOfOperations = Double.parseDouble(fieldResult.getText());
-        }
-    }
-
-    private void mathOperations(int numberOfOperation) {
-
-        if (numberOfOperation == 1) { // addition
-            bufferOfNumbers[2] = resultOfOperations;
-            bufferOfNumbers[0] = bufferOfNumbers[1] + bufferOfNumbers[2];
-            bufferOfNumbers[1] = bufferOfNumbers[0];
-            bufferOfNumbers[2] = 0;
-        } else if (numberOfOperation == 2) { // subtraction
-            bufferOfNumbers[2] = resultOfOperations;
-            bufferOfNumbers[0] = bufferOfNumbers[1] - bufferOfNumbers[2];
-            bufferOfNumbers[1] = bufferOfNumbers[0];
-            bufferOfNumbers[2] = 0;
-        } else if (numberOfOperation == 3) { // division
-            bufferOfNumbers[2] = resultOfOperations;
-
-            try {
-                bufferOfNumbers[0] = bufferOfNumbers[1] / bufferOfNumbers[2];
-            } catch (ArithmeticException e) {
-                fieldResult.setText("can not be divided by zero!");
-            }
-
-            bufferOfNumbers[1] = bufferOfNumbers[0];
-            bufferOfNumbers[2] = 0;
-        } else if (numberOfOperation == 4) { // increase
-            bufferOfNumbers[2] = resultOfOperations;
-            bufferOfNumbers[0] = bufferOfNumbers[1] * bufferOfNumbers[2];
-            bufferOfNumbers[1] = bufferOfNumbers[0];
-            bufferOfNumbers[2] = 0;
         }
     }
 }

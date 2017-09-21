@@ -1,15 +1,10 @@
 import com.jtattoo.plaf.aero.AeroLookAndFeel;
 import listeners.ButtonListener;
 import listeners.ComboBoxListener;
-import listeners.KeysListener;
+import listeners.KeyListener;
 
 import javax.swing.*;
-import java.awt.BorderLayout;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import java.awt.Font;
-import java.awt.Insets;
-import java.awt.Color;
+import java.awt.*;
 
 public class Calculator {
 
@@ -24,7 +19,7 @@ public class Calculator {
     private int[][] numConstrains;
     private int[][] memoryConstrains;
     private ButtonListener buttonListener;
-    private KeysListener keysListener;
+    private KeyListener keyListener;
     private JPanel panel;
     private JFrame frame;
 
@@ -116,11 +111,13 @@ public class Calculator {
         gbc = new GridBagConstraints();
 
         panel = new JPanel(layout);
+        panel.setFocusable(true);
     }
 
     private void createButton() {
         buttonListener = new ButtonListener(fieldResult);
-        keysListener = new KeysListener(fieldResult);
+        keyListener = new KeyListener(fieldResult);
+
         String[] buttonOperations = {"CE", "C", "\uF0E7","1/x", "%", "\u221A", "x2", "\u2797", "7", "8", "9", "\u26CC",
                                      "4", "5", "6", "-", "1", "2", "3", "+", "\u00B1", "0", ",", "="};
         //[0]- gridx, [1]- gridy, [2]- gridWidth, [3]- gridHeight
@@ -137,8 +134,8 @@ public class Calculator {
         for (int i = 0; i < buttonOperations.length; i++) {
             button = new JButton();
             button.setText(buttonOperations[i]);
+            button.setFocusable(false);
             button.addActionListener(buttonListener);
-            button.addKeyListener(keysListener);
 
             gbc.gridx = numConstrains[i][0];
             gbc.gridy = numConstrains[i][1];
@@ -161,8 +158,8 @@ public class Calculator {
         for (int i = 0; i < buttonMemoryOfOperations.length; i++) {
             button = new JButton();
             button.setText(buttonMemoryOfOperations[i]);
+            button.setFocusable(false);
             button.addActionListener(buttonListener);
-            button.addKeyListener(keysListener);
 
             gbc.gridx = memoryConstrains[i][0];
             gbc.gridy = memoryConstrains[i][1];
@@ -173,6 +170,7 @@ public class Calculator {
 
             panel.add(button, gbc);
         }
+        panel.addKeyListener(keyListener);
     }
 
     private void createFrame() {
